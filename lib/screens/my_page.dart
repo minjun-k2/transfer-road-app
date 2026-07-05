@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:transfer_app/main.dart';
 import 'package:transfer_app/services/user_session.dart';
 import 'package:transfer_app/services/api_service.dart';
+import 'change_password_page.dart';
+import 'change_email_page.dart';
+
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -18,12 +21,8 @@ class _MyPageState extends State<MyPage> {
   String _second = '';
   String _third = '';
 
-  final List<String> _allUniversities = [
-    '서울대학교', '연세대학교', '고려대학교', '성균관대학교',
-    '한양대학교', '이화여자대학교', '중앙대학교', '경희대학교',
-    '한국외국어대학교', '서울시립대학교', '건국대학교', '동국대학교',
-    '홍익대학교', '숙명여자대학교', '숭실대학교', '세종대학교',
-  ];
+  List<String> _allUniversities = [];
+
   void _showChangePasswordDialog() {
     final currentPwController = TextEditingController();
     final newPwController = TextEditingController();
@@ -135,6 +134,10 @@ class _MyPageState extends State<MyPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
+      ),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -146,44 +149,57 @@ class _MyPageState extends State<MyPage> {
                 left: 24, right: 24, top: 24,
                 bottom: MediaQuery.of(context).viewInsets.bottom + 24,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('관심 대학 설정', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  _universitySearchField('1지망', tempFirst, (v) => setModalState(() => tempFirst = v), _allUniversities, setModalState),
-                  const SizedBox(height: 12),
-                  _universitySearchField('2지망', tempSecond, (v) => setModalState(() => tempSecond = v), _allUniversities, setModalState),
-                  const SizedBox(height: 12),
-                  _universitySearchField('3지망', tempThird, (v) => setModalState(() => tempThird = v), _allUniversities, setModalState),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _first = tempFirst;
-                          _second = tempSecond;
-                          _third = tempThird;
-                        });
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2D6CDF),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text('완료', style: TextStyle(fontSize: 16, color: Colors.white)),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('관심 대학 설정', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                      ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    _universitySearchField('1지망', tempFirst, (v) => setModalState(() => tempFirst = v), _allUniversities, setModalState),
+                    const SizedBox(height: 12),
+                    _universitySearchField('2지망', tempSecond, (v) => setModalState(() => tempSecond = v), _allUniversities, setModalState),
+                    const SizedBox(height: 12),
+                    _universitySearchField('3지망', tempThird, (v) => setModalState(() => tempThird = v), _allUniversities, setModalState),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        // 이렇게 바꿔
+                        onPressed: () async {
+                          setState(() {
+                            _first = tempFirst;
+                            _second = tempSecond;
+                            _third = tempThird;
+                          });
+                          try {
+                            await ApiService.saveInterest(
+                              userId: UserSession.userId!,
+                              firstName: tempFirst,
+                              secondName: tempSecond,
+                              thirdName: tempThird,
+                            );
+                          } catch (e) {
+                            print('관심 대학 저장 실패: $e');
+                          }
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF2D6CDF),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: const Text('완료', style: TextStyle(fontSize: 16, color: Colors.white)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -192,6 +208,7 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
+
   Widget _universitySearchField(
       String label,
       String value,
@@ -199,10 +216,6 @@ class _MyPageState extends State<MyPage> {
       List<String> universities,
       StateSetter setModalState,
       ) {
-    final controller = TextEditingController(text: value);
-    controller.selection = TextSelection.fromPosition(TextPosition(offset: controller.text.length));
-    final filtered = universities.where((u) => u.contains(value) && value.isNotEmpty).toList();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -247,7 +260,7 @@ class _MyPageState extends State<MyPage> {
                 borderRadius: BorderRadius.circular(12),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width - 48,
-                  height: 220,
+                  height: 120,
                   child: ListView.separated(
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
@@ -271,7 +284,39 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
+  // 이렇게 바꿔
+  @override
+  void initState() {
+    super.initState();
+    _loadUniversities();
+    _loadInterest();
+  }
 
+  Future<void> _loadInterest() async {
+    try {
+      final data = await ApiService.getInterest(UserSession.userId!);
+      if (data != null) {
+        setState(() {
+          _first = data['firstName'] ?? '';
+          _second = data['secondName'] ?? '';
+          _third = data['thirdName'] ?? '';
+        });
+      }
+    } catch (e) {
+      print('관심 대학 불러오기 실패: $e');
+    }
+  }
+
+  Future<void> _loadUniversities() async {
+    try {
+      final data = await ApiService.getUniversities();
+      setState(() {
+        _allUniversities = data.map<String>((u) => u['name'].toString()).toList();
+      });
+    } catch (e) {
+      print('대학 목록 불러오기 실패: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -365,9 +410,13 @@ class _MyPageState extends State<MyPage> {
             _sectionBox(
               title: '계정',
               children: [
-                _arrowTile(Icons.lock_outline, '비밀번호 변경', onTap: _showChangePasswordDialog),
+                _arrowTile(Icons.lock_outline, '비밀번호 변경', onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ChangePasswordPage()));
+                }),
                 _divider(),
-                _arrowTile(Icons.email_outlined, '이메일 변경', onTap: _showChangeEmailDialog),
+                _arrowTile(Icons.email_outlined, '이메일 변경', onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ChangeEmailPage()));
+                }),
               ],
             ),
             const SizedBox(height: 16),

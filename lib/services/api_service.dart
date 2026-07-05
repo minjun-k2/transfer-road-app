@@ -218,4 +218,45 @@ class ApiService {
     }
     throw Exception('이메일 변경 실패');
   }
+  // 관심 대학 저장
+  static Future<dynamic> saveInterest({
+    required int userId,
+    required String firstName,
+    required String secondName,
+    required String thirdName,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/interests'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'userId': userId,
+        'firstName': firstName,
+        'secondName': secondName,
+        'thirdName': thirdName,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception('관심 대학 저장 실패');
+  }
+
+// 관심 대학 조회
+  static Future<dynamic> getInterest(int userId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/interests/$userId'),
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    return null;
+  }
+  // 대학 이름으로 검색
+  static Future<dynamic> getUniversityByName(String name) async {
+    final data = await getUniversities();
+    return data.firstWhere(
+          (u) => u['name'] == name,
+      orElse: () => null,
+    );
+  }
 }

@@ -48,7 +48,8 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(u['name']!, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
+            // 이렇게 바꿔
+            Text(u['name'] ?? '', style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
             Text('${widget.transferType} · ${widget.category}계열', style: const TextStyle(color: Colors.grey, fontSize: 12)),
           ],
         ),        actions: [
@@ -91,12 +92,13 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                   const SizedBox(height: 12),
                   Text(u['name']!, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
+                  // 이렇게 바꿔
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _tag(u['category']!),
+                      _tag(u['category'] ?? ''),
                       const SizedBox(width: 8),
-                      _tag(u['exam']!),
+                      _tag(u['exam'] ?? ''),
                     ],
                   ),
                 ],
@@ -105,14 +107,13 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
             const SizedBox(height: 16),
 
             // 모집 정보
+            // 이렇게 바꿔
             _sectionBox(
               title: '모집 정보',
               children: [
-                _infoRow(Icons.people_outline, '모집인원 (TO)', u['to']!),
+                _infoRow(Icons.edit_outlined, '전형 방법', u['exam'] ?? ''),
                 _divider(),
-                _infoRow(Icons.edit_outlined, '전형 방법', u['exam']!),
-                _divider(),
-                _infoRow(Icons.category_outlined, '계열', u['category']!),
+                _infoRow(Icons.category_outlined, '계열', u['category'] ?? ''),
               ],
             ),
             const SizedBox(height: 16),
@@ -121,11 +122,12 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
             _sectionBox(
               title: '전형 일정',
               children: [
-                _infoRow(Icons.assignment_outlined, '원서 접수', u['deadline']!),
+                // 이렇게 바꿔
+                _infoRow(Icons.assignment_outlined, '원서 접수', u['deadline'] ?? ''),
                 _divider(),
-                _infoRow(Icons.edit_calendar_outlined, '시험일', '2025.02.01'),
+                _infoRow(Icons.edit_calendar_outlined, '시험일', u['examDate'] ?? ''),
                 _divider(),
-                _infoRow(Icons.campaign_outlined, '합격 발표', '2025.02.15'),
+                _infoRow(Icons.campaign_outlined, '합격 발표', u['resultDate'] ?? ''),
               ],
             ),
             const SizedBox(height: 16),

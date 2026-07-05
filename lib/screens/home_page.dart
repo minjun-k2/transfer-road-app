@@ -13,11 +13,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<dynamic> _posts = [];
   bool _loading = true;
+  List<dynamic> _interestUniversities = [];
+  bool _loadingInterest = true;
 
   @override
   void initState() {
     super.initState();
     _loadPosts();
+    _loadInterestUniversities();
   }
 
   Future<void> _loadPosts() async {
@@ -29,7 +32,31 @@ class _HomePageState extends State<HomePage> {
       });
     } catch (e) {
       setState(() => _loading = false);
-      print('게시글 불러오기 실패: $e');
+    }
+  }
+
+  Future<void> _loadInterestUniversities() async {
+    try {
+      final interest = await ApiService.getInterest(UserSession.userId!);
+      if (interest == null) {
+        setState(() => _loadingInterest = false);
+        return;
+      }
+
+      final List<dynamic> result = [];
+      for (final name in [interest['firstName'], interest['secondName'], interest['thirdName']]) {
+        if (name != null && name.toString().isNotEmpty) {
+          final u = await ApiService.getUniversityByName(name.toString());
+          if (u != null) result.add(u);
+        }
+      }
+
+      setState(() {
+        _interestUniversities = result;
+        _loadingInterest = false;
+      });
+    } catch (e) {
+      setState(() => _loadingInterest = false);
     }
   }
 
@@ -56,8 +83,65 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 관심 대학 공고 섹션
+            if (!_loadingInterest && _interestUniversities.isNotEmpty)
+              _sectionBox(
+                title: '관심 대학 공고',
+                children: _interestUniversities.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final u = entry.value;
+                  final ranks = ['1지망', '2지망', '3지망'];
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEEF3FF),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                ranks[index],
+                                style: const TextStyle(fontSize: 11, color: Color(0xFF2D6CDF), fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(u['name'] ?? '', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '접수: ${u['admissionStart'] ?? ''} ~ ${u['admissionEnd'] ?? ''}',
+                                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  ),
+                                  Text(
+                                    '시험: ${u['examDate'] ?? ''}  발표: ${u['resultDate'] ?? ''}',
+                                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (index != _interestUniversities.length - 1)
+                        const Divider(height: 1, indent: 16, endIndent: 16, color: Color(0xFFEEEEEE)),
+                    ],
+                  );
+                }).toList(),
+              ),
+            if (!_loadingInterest && _interestUniversities.isNotEmpty)
+              const SizedBox(height: 16),
+
+            // 최근 공고 섹션
             _sectionBox(
               title: '최근 공고',
+              onMore: () {},
               children: [
                 _announcementItem('서울대학교', '2025학년도 편입학 모집 공고', '2일 전'),
                 _divider(),
@@ -67,7 +151,8 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             const SizedBox(height: 16),
-            // 이렇게 바꿔
+
+            // 커뮤니티 섹션
             _sectionBox(
               title: '커뮤니티',
               onMore: () {
@@ -113,7 +198,6 @@ class _HomePageState extends State<HomePage> {
     return items;
   }
 
-  // 이렇게 바꿔
   Widget _sectionBox({required String title, required List<Widget> children, VoidCallback? onMore}) {
     return Container(
       decoration: BoxDecoration(

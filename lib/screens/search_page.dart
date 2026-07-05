@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:transfer_app/services/api_service.dart';
 import 'university_detail_page.dart';
 
 class SearchPage extends StatefulWidget {
@@ -19,20 +20,36 @@ class _SearchPageState extends State<SearchPage> {
   final _searchController = TextEditingController();
   String _selectedCategory = '전체';
   String _selectedExam = '전체';
+  List<Map<String, String>> _universities = [];
+  bool _loading = true;
 
   final List<String> _categories = ['전체', '인문', '자연', '예체능'];
   final List<String> _exams = ['전체', '수학', '영어', '수학+영어'];
 
-  final List<Map<String, String>> _universities = [
-    {'name': '서울대학교', 'category': '인문', 'exam': '수학+영어', 'to': '10명', 'deadline': '2025.01.15'},
-    {'name': '연세대학교', 'category': '자연', 'exam': '수학', 'to': '15명', 'deadline': '2025.01.20'},
-    {'name': '고려대학교', 'category': '인문', 'exam': '영어', 'to': '12명', 'deadline': '2025.01.18'},
-    {'name': '성균관대학교', 'category': '자연', 'exam': '수학+영어', 'to': '8명', 'deadline': '2025.01.22'},
-    {'name': '한양대학교', 'category': '인문', 'exam': '수학', 'to': '20명', 'deadline': '2025.01.25'},
-    {'name': '이화여자대학교', 'category': '예체능', 'exam': '영어', 'to': '5명', 'deadline': '2025.01.28'},
-    {'name': '중앙대학교', 'category': '자연', 'exam': '수학', 'to': '18명', 'deadline': '2025.02.01'},
-    {'name': '경희대학교', 'category': '인문', 'exam': '영어', 'to': '14명', 'deadline': '2025.02.05'},
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadUniversities();
+  }
+
+  Future<void> _loadUniversities() async {
+    try {
+      final data = await ApiService.getUniversities();
+      setState(() {
+        _universities = data.map<Map<String, String>>((u) => {
+          'id': u['id'].toString(),
+          'name': u['name'] ?? '',
+          'category': u['category'] ?? '',
+          'exam': u['examType'] ?? '',
+          'deadline': u['admissionEnd'] ?? '',
+        }).toList();
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() => _loading = false);
+      print('대학 불러오기 실패: $e');
+    }
+  }
 
   List<Map<String, String>> get _filtered {
     return _universities.where((u) {
@@ -380,7 +397,11 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           Expanded(
-            child: ListView.builder(
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : _filtered.isEmpty
+                ? const Center(child: Text('검색 결과가 없어요', style: TextStyle(color: Colors.grey)))
+                : ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: _filtered.length,
               itemBuilder: (context, index) {
@@ -431,6 +452,7 @@ class _SearchPageState extends State<SearchPage> {
           children: [
             Expanded(
               child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => _showUniversityBottomSheet(context, u, isFavorite),
                 child: Row(
                   children: [
@@ -449,24 +471,12 @@ class _SearchPageState extends State<SearchPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(u['name']!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              _tag(u['category']!),
-                              const SizedBox(width: 6),
-                              _tag(u['exam']!),
-                            ],
-                          ),
                           const SizedBox(height: 6),
                           Row(
                             children: [
-                              const Icon(Icons.people_outline, size: 13, color: Colors.grey),
-                              const SizedBox(width: 4),
-                              Text('TO: ${u['to']}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                              const SizedBox(width: 12),
                               const Icon(Icons.calendar_today_outlined, size: 13, color: Colors.grey),
                               const SizedBox(width: 4),
-                              Text('마감: ${u['deadline']}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                              Text('접수: ${u['deadline']}', style: const TextStyle(fontSize: 13, color: Colors.grey)),
                             ],
                           ),
                         ],
@@ -490,17 +500,6 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _tag(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEEF3FF),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF2D6CDF), fontWeight: FontWeight.w600)),
     );
   }
 
