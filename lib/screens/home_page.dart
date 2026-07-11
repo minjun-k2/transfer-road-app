@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:transfer_app/services/api_service.dart';
 import 'package:transfer_app/services/user_session.dart';
 import 'community_page.dart';
+import 'announcement_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,16 +12,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // 이렇게 바꿔
   List<dynamic> _posts = [];
+  List<dynamic> _announcements = [];
   bool _loading = true;
+  bool _loadingAnnouncements = true;
   List<dynamic> _interestUniversities = [];
   bool _loadingInterest = true;
 
+  // 이렇게 바꿔
   @override
   void initState() {
     super.initState();
     _loadPosts();
     _loadInterestUniversities();
+    _loadAnnouncements();
+  }
+
+  Future<void> _loadAnnouncements() async {
+    try {
+      final data = await ApiService.getAnnouncements();
+      setState(() {
+        _announcements = data;
+        _loadingAnnouncements = false;
+      });
+    } catch (e) {
+      setState(() => _loadingAnnouncements = false);
+      print('공고 불러오기 실패: $e');
+    }
   }
 
   Future<void> _loadPosts() async {
@@ -63,13 +82,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFF8F9FB),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
           '편입로드',
-          style: TextStyle(color: Color(0xFF2D6CDF), fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(color: Color(0xFF1A2B4A), fontWeight: FontWeight.bold, fontSize: 20),
         ),
         actions: [
           IconButton(
@@ -100,12 +119,12 @@ class _HomePageState extends State<HomePage> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFEEF3FF),
+                                color: const Color(0xFFE8EEF7),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
                                 ranks[index],
-                                style: const TextStyle(fontSize: 11, color: Color(0xFF2D6CDF), fontWeight: FontWeight.w600),
+                                style: const TextStyle(fontSize: 11, color: Color(0xFF1A2B4A), fontWeight: FontWeight.w600),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -139,16 +158,36 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 16),
 
             // 최근 공고 섹션
+            // 이렇게 바꿔
             _sectionBox(
               title: '최근 공고',
-              onMore: () {},
-              children: [
-                _announcementItem('서울대학교', '2025학년도 편입학 모집 공고', '2일 전'),
-                _divider(),
-                _announcementItem('연세대학교', '2025학년도 일반편입 모집요강 발표', '3일 전'),
-                _divider(),
-                _announcementItem('고려대학교', '편입학 전형 안내 업데이트', '5일 전'),
-              ],
+              // 이렇게 바꿔
+              onMore: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AnnouncementPage()));
+              },
+              children: _loadingAnnouncements
+                  ? [const Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))]
+                  : _announcements.isEmpty
+                  ? [const Padding(padding: EdgeInsets.all(20), child: Center(child: Text('공고가 없어요', style: TextStyle(color: Colors.grey))))]
+              // 이렇게 바꿔
+                  : _announcements.take(4).expand((a) {
+                final createdAt = a['createdAt'] ?? '';
+                final date = createdAt.toString().length >= 10 ? createdAt.toString().substring(0, 10) : '';
+                return [
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AnnouncementDetailPage(announcement: a)),
+                      );
+                    },
+                    child: _announcementItem(a['universityName'] ?? '', a['title'] ?? '', date),
+                  ),
+                  if (a != _announcements[_announcements.length > 4 ? 3 : _announcements.length - 1])
+                    _divider(),
+                ];
+              }).toList(),
             ),
             const SizedBox(height: 16),
 
@@ -215,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                 Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 TextButton(
                   onPressed: onMore,
-                  child: const Text('더보기', style: TextStyle(color: Color(0xFF2D6CDF), fontSize: 13)),
+                  child: const Text('더보기', style: TextStyle(color: Color(0xFF1A2B4A), fontSize: 13)),
                 ),
               ],
             ),
@@ -240,7 +279,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text(
                   university,
-                  style: const TextStyle(fontSize: 12, color: Color(0xFF2D6CDF), fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontSize: 12, color: Color(0xFF1A2B4A), fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 4),
                 Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
@@ -263,12 +302,12 @@ class _HomePageState extends State<HomePage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
-              color: const Color(0xFFEEF3FF),
+              color: const Color(0xFFE8EEF7),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
               category,
-              style: const TextStyle(fontSize: 11, color: Color(0xFF2D6CDF), fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 11, color: Color(0xFF1A2B4A), fontWeight: FontWeight.w600),
             ),
           ),
           const SizedBox(height: 6),

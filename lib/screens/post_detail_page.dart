@@ -108,7 +108,35 @@ class _PostDetailPageState extends State<PostDetailPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context, _post),
         ),
+        // 이렇게 바꿔
         title: const Text('게시글', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        actions: [
+          if (_post['user']?['id'] == UserSession.userId)
+            IconButton(
+              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              onPressed: () async {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('게시글 삭제'),
+                    content: const Text('정말 삭제하시겠습니까?'),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('취소')),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        child: const Text('삭제', style: TextStyle(color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirm == true) {
+                  await ApiService.deletePost(_post['id']);
+                  Navigator.pop(context);
+                }
+              },
+            ),
+        ],
       ),
       body: Column(
         children: [
@@ -125,10 +153,10 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEEF3FF),
+                          color: const Color(0xFFE8EEF7),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Icon(Icons.person, color: Color(0xFF2D6CDF), size: 22),
+                        child: const Icon(Icons.person, color: Color(0xFF1A2B4A), size: 22),
                       ),
                       const SizedBox(width: 10),
                       Column(
@@ -143,12 +171,12 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEEF3FF),
+                          color: const Color(0xFFE8EEF7),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           _post['category'] ?? '',
-                          style: const TextStyle(fontSize: 12, color: Color(0xFF2D6CDF), fontWeight: FontWeight.w600),
+                          style: const TextStyle(fontSize: 12, color: Color(0xFF1A2B4A), fontWeight: FontWeight.w600),
                         ),
                       ),
                     ],
@@ -212,10 +240,12 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       child: Center(child: Text('첫 댓글을 남겨보세요', style: TextStyle(color: Colors.grey, fontSize: 13))),
                     )
                   else
+                  // 이렇게 바꿔
                     ..._comments.map((comment) {
                       final commentAnonymous = comment['anonymous'] == true;
                       final commentAuthor = commentAnonymous ? '익명' : (comment['user']?['name'] ?? '익명');
                       final commentDate = _formatDate((comment['createdAt'] ?? '').toString());
+                      final isMyComment = comment['user']?['id'] == UserSession.userId;
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: Row(
@@ -225,7 +255,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                               width: 30,
                               height: 30,
                               decoration: BoxDecoration(
-                                color: const Color(0xFFF5F7FA),
+                                color: const Color(0xFFF8F9FB),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: const Icon(Icons.person, color: Colors.black54, size: 16),
@@ -240,6 +270,32 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                       Text(commentAuthor, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                                       const SizedBox(width: 6),
                                       Text(commentDate, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                                      const Spacer(),
+                                      if (isMyComment)
+                                        GestureDetector(
+                                          onTap: () async {
+                                            final confirm = await showDialog<bool>(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: const Text('댓글 삭제'),
+                                                content: const Text('정말 삭제하시겠습니까?'),
+                                                actions: [
+                                                  TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('취소')),
+                                                  ElevatedButton(
+                                                    onPressed: () => Navigator.pop(context, true),
+                                                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                                                    child: const Text('삭제', style: TextStyle(color: Colors.white)),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                            if (confirm == true) {
+                                              await ApiService.deleteComment(comment['id']);
+                                              _loadComments();
+                                            }
+                                          },
+                                          child: const Text('삭제', style: TextStyle(fontSize: 12, color: Colors.red)),
+                                        ),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
@@ -275,7 +331,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     decoration: BoxDecoration(
-                      color: _isAnonymous ? Colors.black87 : const Color(0xFFF5F7FA),
+                      color: _isAnonymous ? Colors.black87 : const Color(0xFFF8F9FB),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -295,7 +351,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                     decoration: InputDecoration(
                       hintText: '댓글을 입력하세요',
                       filled: true,
-                      fillColor: const Color(0xFFF5F7FA),
+                      fillColor: const Color(0xFFF8F9FB),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -329,4 +385,5 @@ class _PostDetailPageState extends State<PostDetailPage> {
     _commentController.dispose();
     super.dispose();
   }
+
 }

@@ -37,7 +37,7 @@ class _CommunityPageState extends State<CommunityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -57,7 +57,7 @@ class _CommunityPageState extends State<CommunityPage> {
             _loadPosts();
           }
         },
-        backgroundColor: const Color(0xFF2D6CDF),
+        backgroundColor: const Color(0xFF1A2B4A),
         child: const Icon(Icons.edit, color: Colors.white),
       ),
       body: _loading
@@ -67,7 +67,8 @@ class _CommunityPageState extends State<CommunityPage> {
           : ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: _posts.length,
-        separatorBuilder: (context, index) => const Divider(height: 1, color: Color(0xFFEEEEEE)),
+        // 이렇게 바꿔
+        separatorBuilder: (context, index) => const Divider(height: 1, color: Color(0xFFCCCCCC)),
         itemBuilder: (context, index) {
           final post = _posts[index];
           // 이렇게 바꿔
@@ -88,14 +89,14 @@ class _CommunityPageState extends State<CommunityPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEEF3FF),
+                      color: const Color(0xFFE8EEF7),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       post['category'] ?? '',
                       style: const TextStyle(
                         fontSize: 11,
-                        color: Color(0xFF2D6CDF),
+                        color: Color(0xFF1A2B4A),
                         fontWeight: FontWeight.w600,
                       ),
                     ),

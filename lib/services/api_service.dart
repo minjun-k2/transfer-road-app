@@ -259,4 +259,21 @@ class ApiService {
       orElse: () => null,
     );
   }
+  // 게시글 삭제
+  static Future<void> deletePost(int postId) async {
+    await http.delete(Uri.parse('$baseUrl/posts/$postId'));
+  }
+
+// 댓글 삭제
+  static Future<void> deleteComment(int commentId) async {
+    await http.delete(Uri.parse('$baseUrl/comments/$commentId'));
+  }
+  // 공고 목록 조회
+  static Future<List<dynamic>> getAnnouncements() async {
+    final response = await http.get(Uri.parse('$baseUrl/announcements'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception('공고 조회 실패');
+  }
 }

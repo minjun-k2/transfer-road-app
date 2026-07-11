@@ -76,7 +76,7 @@ class _FindIdPageState extends State<FindIdPage> {
                       actions: [
                         ElevatedButton(
                           onPressed: () => Navigator.pop(context),
-                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2D6CDF)),
+                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A2B4A)),
                           child: const Text('확인', style: TextStyle(color: Colors.white)),
                         ),
                       ],
@@ -84,7 +84,7 @@ class _FindIdPageState extends State<FindIdPage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2D6CDF),
+                  backgroundColor: const Color(0xFF1A2B4A),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 child: const Text('아이디 찾기', style: TextStyle(fontSize: 16, color: Colors.white)),

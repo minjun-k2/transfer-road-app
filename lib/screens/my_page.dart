@@ -73,7 +73,7 @@ class _MyPageState extends State<MyPage> {
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2D6CDF)),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A2B4A)),
             child: const Text('변경', style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -118,7 +118,7 @@ class _MyPageState extends State<MyPage> {
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2D6CDF)),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A2B4A)),
             child: const Text('변경', style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -192,7 +192,7 @@ class _MyPageState extends State<MyPage> {
                           Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF2D6CDF),
+                          backgroundColor: const Color(0xFF1A2B4A),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         child: const Text('완료', style: TextStyle(fontSize: 16, color: Colors.white)),
@@ -321,7 +321,7 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFF8F9FB),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -346,10 +346,10 @@ class _MyPageState extends State<MyPage> {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEEF3FF),
+                      color: const Color(0xFFE8EEF7),
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    child: const Icon(Icons.person, color: Color(0xFF2D6CDF), size: 32),
+                    child: const Icon(Icons.person, color: Color(0xFF1A2B4A), size: 32),
                   ),
                   const SizedBox(width: 16),
 
@@ -365,7 +365,7 @@ class _MyPageState extends State<MyPage> {
                   ),
                   TextButton(
                     onPressed: _showUniversitySettings,
-                    child: const Text('대학 설정', style: TextStyle(color: Color(0xFF2D6CDF), fontWeight: FontWeight.w600)),
+                    child: const Text('대학 설정', style: TextStyle(color: Color(0xFF1A2B4A), fontWeight: FontWeight.w600)),
                   ),
                 ],
               ),
@@ -496,10 +496,10 @@ class _MyPageState extends State<MyPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFFEEF3FF),
+              color: const Color(0xFFE8EEF7),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Text(rank, style: const TextStyle(color: Color(0xFF2D6CDF), fontWeight: FontWeight.w600, fontSize: 13)),
+            child: Text(rank, style: const TextStyle(color: Color(0xFF1A2B4A), fontWeight: FontWeight.w600, fontSize: 13)),
           ),
           const SizedBox(width: 12),
           Text(name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
@@ -510,10 +510,10 @@ class _MyPageState extends State<MyPage> {
 
   Widget _switchTile(IconData icon, String title, bool value, Function(bool) onChanged) {
     return SwitchListTile(
-      secondary: Icon(icon, color: const Color(0xFF2D6CDF)),
+      secondary: Icon(icon, color: const Color(0xFF1A2B4A)),
       title: Text(title, style: const TextStyle(fontSize: 15)),
       value: value,
-      activeColor: const Color(0xFF2D6CDF),
+      activeColor: const Color(0xFF1A2B4A),
       onChanged: onChanged,
     );
   }
@@ -521,7 +521,7 @@ class _MyPageState extends State<MyPage> {
   // 이렇게 바꿔
   Widget _arrowTile(IconData icon, String title, {VoidCallback? onTap}) {
     return ListTile(
-      leading: Icon(icon, color: const Color(0xFF2D6CDF)),
+      leading: Icon(icon, color: const Color(0xFF1A2B4A)),
       title: Text(title, style: const TextStyle(fontSize: 15)),
       trailing: const Icon(Icons.chevron_right, color: Colors.grey),
       onTap: onTap,

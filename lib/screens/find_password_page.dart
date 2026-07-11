@@ -81,7 +81,7 @@ class _FindPasswordPageState extends State<FindPasswordPage> {
                 ElevatedButton(
                   onPressed: () => setState(() => _codeSent = true),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2D6CDF),
+                    backgroundColor: const Color(0xFF1A2B4A),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
                   ),
@@ -111,7 +111,7 @@ class _FindPasswordPageState extends State<FindPasswordPage> {
                   ElevatedButton(
                     onPressed: () => setState(() => _codeVerified = true),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2D6CDF),
+                      backgroundColor: const Color(0xFF1A2B4A),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
                     ),
@@ -173,7 +173,7 @@ class _FindPasswordPageState extends State<FindPasswordPage> {
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },
-                            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2D6CDF)),
+                            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A2B4A)),
                             child: const Text('로그인하기', style: TextStyle(color: Colors.white)),
                           ),
                         ],
@@ -181,7 +181,7 @@ class _FindPasswordPageState extends State<FindPasswordPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2D6CDF),
+                    backgroundColor: const Color(0xFF1A2B4A),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text('비밀번호 변경', style: TextStyle(fontSize: 16, color: Colors.white)),

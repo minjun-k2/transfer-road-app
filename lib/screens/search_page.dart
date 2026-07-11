@@ -36,12 +36,17 @@ class _SearchPageState extends State<SearchPage> {
     try {
       final data = await ApiService.getUniversities();
       setState(() {
+        // 이렇게 바꿔
         _universities = data.map<Map<String, String>>((u) => {
           'id': u['id'].toString(),
           'name': u['name'] ?? '',
           'category': u['category'] ?? '',
           'exam': u['examType'] ?? '',
           'deadline': u['admissionEnd'] ?? '',
+          'admissionStart': u['admissionStart'] ?? '',
+          'examDate': u['examDate'] ?? '',
+          'resultDate': u['resultDate'] ?? '',
+          'campus': u['campus'] ?? '',
         }).toList();
         _loading = false;
       });
@@ -100,7 +105,7 @@ class _SearchPageState extends State<SearchPage> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
-                            color: isSelected ? const Color(0xFF2D6CDF) : const Color(0xFFF5F7FA),
+                            color: isSelected ? const Color(0xFF1A2B4A) : const Color(0xFFF8F9FB),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -126,7 +131,7 @@ class _SearchPageState extends State<SearchPage> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
-                            color: isSelected ? const Color(0xFF2D6CDF) : const Color(0xFFF5F7FA),
+                            color: isSelected ? const Color(0xFF1A2B4A) : const Color(0xFFF8F9FB),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -153,7 +158,7 @@ class _SearchPageState extends State<SearchPage> {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2D6CDF),
+                        backgroundColor: const Color(0xFF1A2B4A),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       child: const Text('적용', style: TextStyle(fontSize: 16, color: Colors.white)),
@@ -196,14 +201,14 @@ class _SearchPageState extends State<SearchPage> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 20),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFEEF3FF),
+                              color: const Color(0xFFE8EEF7),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Column(
                               children: [
-                                Icon(Icons.school_outlined, color: Color(0xFF2D6CDF), size: 32),
+                                Icon(Icons.school_outlined, color: Color(0xFF1A2B4A), size: 32),
                                 SizedBox(height: 8),
-                                Text('일반편입', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF2D6CDF))),
+                                Text('일반편입', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1A2B4A))),
                                 SizedBox(height: 4),
                                 Text('전문대 졸업자', style: TextStyle(fontSize: 11, color: Colors.grey)),
                               ],
@@ -260,8 +265,6 @@ class _SearchPageState extends State<SearchPage> {
                               MaterialPageRoute(
                                 builder: (context) => UniversityDetailPage(
                                   university: u,
-                                  transferType: selectedType!,
-                                  category: '인문',
                                   isFavorite: isFavorite,
                                   onToggleFavorite: widget.onToggleFavorite,
                                 ),
@@ -271,14 +274,14 @@ class _SearchPageState extends State<SearchPage> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 20),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFEEF3FF),
+                              color: const Color(0xFFE8EEF7),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Column(
                               children: [
-                                Icon(Icons.history_edu_outlined, color: Color(0xFF2D6CDF), size: 32),
+                                Icon(Icons.history_edu_outlined, color: Color(0xFF1A2B4A), size: 32),
                                 SizedBox(height: 8),
-                                Text('인문계열', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF2D6CDF))),
+                                Text('인문계열', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1A2B4A))),
                               ],
                             ),
                           ),
@@ -294,8 +297,6 @@ class _SearchPageState extends State<SearchPage> {
                               MaterialPageRoute(
                                 builder: (context) => UniversityDetailPage(
                                   university: u,
-                                  transferType: selectedType!,
-                                  category: '자연',
                                   isFavorite: isFavorite,
                                   onToggleFavorite: widget.onToggleFavorite,
                                 ),
@@ -305,14 +306,14 @@ class _SearchPageState extends State<SearchPage> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 20),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFEEF3FF),
+                              color: const Color(0xFFE8EEF7),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Column(
                               children: [
-                                Icon(Icons.science_outlined, color: Color(0xFF2D6CDF), size: 32),
+                                Icon(Icons.science_outlined, color: Color(0xFF1A2B4A), size: 32),
                                 SizedBox(height: 8),
-                                Text('자연계열', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF2D6CDF))),
+                                Text('자연계열', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1A2B4A))),
                               ],
                             ),
                           ),
@@ -333,7 +334,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: const Color(0xFFF8F9FB),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -354,7 +355,7 @@ class _SearchPageState extends State<SearchPage> {
                       hintText: '대학교 이름으로 검색',
                       prefixIcon: const Icon(Icons.search, color: Colors.grey),
                       filled: true,
-                      fillColor: const Color(0xFFF5F7FA),
+                      fillColor: const Color(0xFFF8F9FB),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -369,8 +370,8 @@ class _SearchPageState extends State<SearchPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                     decoration: BoxDecoration(
                       color: (_selectedCategory != '전체' || _selectedExam != '전체')
-                          ? const Color(0xFF2D6CDF)
-                          : const Color(0xFFF5F7FA),
+                          ? const Color(0xFF1A2B4A)
+                          : const Color(0xFFF8F9FB),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -421,17 +422,17 @@ class _SearchPageState extends State<SearchPage> {
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFEEF3FF),
+        color: const Color(0xFFE8EEF7),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF2D6CDF), fontWeight: FontWeight.w600)),
+          Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF1A2B4A), fontWeight: FontWeight.w600)),
           const SizedBox(width: 4),
           GestureDetector(
             onTap: onRemove,
-            child: const Icon(Icons.close, size: 14, color: Color(0xFF2D6CDF)),
+            child: const Icon(Icons.close, size: 14, color: Color(0xFF1A2B4A)),
           ),
         ],
       ),
@@ -453,17 +454,29 @@ class _SearchPageState extends State<SearchPage> {
             Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => _showUniversityBottomSheet(context, u, isFavorite),
+                // 이렇게 바꿔
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UniversityDetailPage(
+                        university: u,
+                        isFavorite: isFavorite,
+                        onToggleFavorite: widget.onToggleFavorite,
+                      ),
+                    ),
+                  );
+                },
                 child: Row(
                   children: [
                     Container(
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFEEF3FF),
+                        color: const Color(0xFFE8EEF7),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.school, color: Color(0xFF2D6CDF)),
+                      child: const Icon(Icons.school, color: Color(0xFF1A2B4A)),
                     ),
                     const SizedBox(width: 14),
                     Expanded(

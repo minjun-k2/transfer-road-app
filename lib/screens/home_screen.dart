@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final data = await ApiService.getFavorites(UserSession.userId!);
       setState(() {
+        // 이렇게 바꿔
         _favorites = data.map<Map<String, String>>((f) {
           final u = f['university'];
           return {
@@ -38,6 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
             'exam': u['examType'] ?? '',
             'to': '',
             'deadline': u['admissionEnd'] ?? '',
+            'admissionStart': u['admissionStart'] ?? '',
+            'examDate': u['examDate'] ?? '',
+            'resultDate': u['resultDate'] ?? '',
+            'campus': u['campus'] ?? '',
           };
         }).toList();
       });
@@ -96,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFF2D6CDF),
+        selectedItemColor: const Color(0xFF1A2B4A),
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: '홈'),

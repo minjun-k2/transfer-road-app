@@ -112,7 +112,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               child: ElevatedButton(
                 onPressed: _submit,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2D6CDF),
+                  backgroundColor: const Color(0xFF1A2B4A),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 child: const Text('변경하기', style: TextStyle(fontSize: 16, color: Colors.white)),

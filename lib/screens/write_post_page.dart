@@ -54,7 +54,7 @@ class _WritePostPageState extends State<WritePostPage> {
         actions: [
           TextButton(
             onPressed: _submit,
-            child: const Text('등록', style: TextStyle(color: Color(0xFF2D6CDF), fontWeight: FontWeight.bold, fontSize: 15)),
+            child: const Text('등록', style: TextStyle(color: Color(0xFF1A2B4A), fontWeight: FontWeight.bold, fontSize: 15)),
           ),
         ],
       ),
@@ -74,7 +74,7 @@ class _WritePostPageState extends State<WritePostPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected ? const Color(0xFF2D6CDF) : const Color(0xFFF5F7FA),
+                      color: isSelected ? const Color(0xFF1A2B4A) : const Color(0xFFF8F9FB),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -99,7 +99,7 @@ class _WritePostPageState extends State<WritePostPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
-                      color: _isAnonymous ? const Color(0xFF2D6CDF) : const Color(0xFFF5F7FA),
+                      color: _isAnonymous ? const Color(0xFF1A2B4A) : const Color(0xFFF8F9FB),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text('익명', style: TextStyle(color: _isAnonymous ? Colors.white : Colors.grey, fontSize: 13)),
@@ -111,7 +111,7 @@ class _WritePostPageState extends State<WritePostPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
-                      color: !_isAnonymous ? const Color(0xFF2D6CDF) : const Color(0xFFF5F7FA),
+                      color: !_isAnonymous ? const Color(0xFF1A2B4A) : const Color(0xFFF8F9FB),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text('실명', style: TextStyle(color: !_isAnonymous ? Colors.white : Colors.grey, fontSize: 13)),

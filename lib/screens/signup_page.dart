@@ -112,7 +112,7 @@ class _SignupPageState extends State<SignupPage> {
                     onPressed: () {},
 
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2D6CDF),
+                      backgroundColor: const Color(0xFF1A2B4A),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     ),
@@ -245,7 +245,7 @@ class _SignupPageState extends State<SignupPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2D6CDF),
+                    backgroundColor: const Color(0xFF1A2B4A),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text('회원가입', style: TextStyle(fontSize: 16, color: Colors.white)),

@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '편입 정보',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2D6CDF)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1A2B4A)),
         useMaterial3: true,
       ),
       home: const LoginPage(),
@@ -58,11 +58,11 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 40),
 
               // 로고
-              const Icon(Icons.school, size: 64, color: Color(0xFF2D6CDF)),
+              const Icon(Icons.school, size: 64, color: Color(0xFF1A2B4A)),
               const SizedBox(height: 12),
               const Text(
                 '편입로드',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF2D6CDF)),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1A2B4A)),
               ),
               const SizedBox(height: 8),
               const Text('편입 정보의 모든 것', style: TextStyle(fontSize: 14, color: Colors.grey)),
@@ -146,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2D6CDF),
+                    backgroundColor: const Color(0xFF1A2B4A),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text('로그인', style: TextStyle(fontSize: 16, color: Colors.white)),
